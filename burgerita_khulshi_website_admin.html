@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burgerita Khulshi</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --brand: #C8380A;
+    --brand-dark: #8A2006;
+    --cream: #FDF6EC;
+    --charcoal: #1A1209;
+    --warm-gray: #6B5C4E;
+    --gold: #E8A020;
+    --green: #2F9E44;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background:
+      linear-gradient(rgba(26,18,9,0.88), rgba(26,18,9,0.94)),
+      var(--site-bg-image, linear-gradient(var(--charcoal), var(--charcoal)));
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+  button, input, textarea, select { font-family: inherit; }
+  button { cursor: pointer; }
+  a { color: inherit; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 99;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(26,18,9,0.94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(200,56,10,0.25);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.65rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px;
+    color: var(--cream);
+  }
+  .logo-img {
+    display: none; width: 46px; height: 46px; object-fit: contain;
+    border-radius: 8px; background: rgba(253,246,236,0.92);
+    padding: 0.25rem; box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  }
+  .logo-img.has-logo { display: block; }
+  .nav-logo span { color: var(--brand); }
+  .nav-links { display: flex; gap: 1.6rem; align-items: center; }
+  .nav-links a, .admin-link {
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(253,246,236,0.68); text-decoration: none; transition: color 0.2s;
+    background: none; border: 0;
+  }
+  .nav-links a:hover, .admin-link:hover { color: var(--cream); }
+  .nav-actions { display: flex; align-items: center; gap: 0.7rem; }
+  .nav-cta {
+    background: var(--brand); color: var(--cream);
+    border: none; padding: 0.62rem 1.25rem; border-radius: 2rem;
+    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--brand-dark); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 2.5rem 5rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      linear-gradient(90deg, rgba(26,18,9,0.95) 0%, rgba(26,18,9,0.78) 46%, rgba(26,18,9,0.35) 100%),
+      var(--hero-image, radial-gradient(ellipse 70% 60% at 70% 50%, rgba(200,56,10,0.22) 0%, transparent 70%));
+    background-size: cover;
+    background-position: center;
+  }
+  .hero-ring {
+    position: absolute; right: -80px; top: 50%; transform: translateY(-50%);
+    width: 600px; height: 600px; border-radius: 50%;
+    border: 1px solid rgba(200,56,10,0.2);
+    z-index: 0;
+  }
+  .hero-ring::before {
+    content: ''; position: absolute; inset: 40px; border-radius: 50%;
+    border: 1px solid rgba(200,56,10,0.15);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 620px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(200,56,10,0.15); border: 1px solid rgba(200,56,10,0.4);
+    padding: 0.35rem 1rem; border-radius: 2rem; margin-bottom: 1.5rem;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; color: var(--gold);
+  }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 900; line-height: 1.05; letter-spacing: 0;
+    margin-bottom: 1.2rem;
+  }
+  h1 em { color: var(--brand); font-style: italic; }
+  .hero-sub {
+    font-size: 1rem; font-weight: 300; color: rgba(253,246,236,0.68);
+    line-height: 1.7; max-width: 480px; margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--brand); color: var(--cream);
+    padding: 0.85rem 1.7rem; border-radius: 2rem; border: none;
+    font-size: 0.9rem; font-weight: 700;
+    transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: var(--brand-dark); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: var(--cream);
+    padding: 0.85rem 1.7rem; border-radius: 2rem; border: 1px solid rgba(253,246,236,0.25);
+    font-size: 0.9rem; font-weight: 700; transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: rgba(253,246,236,0.5); }
+  .hero-stats {
+    display: flex; gap: 3rem; margin-top: 4rem; padding-top: 2rem;
+    border-top: 1px solid rgba(253,246,236,0.1);
+  }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--cream); }
+  .stat-label { font-size: 0.78rem; color: rgba(253,246,236,0.5); letter-spacing: 0.05em; margin-top: 0.2rem; }
+
+  .marquee-wrap { background: var(--brand); overflow: hidden; padding: 0.8rem 0; }
+  .marquee-track { display: flex; width: max-content; animation: marquee 18s linear infinite; }
+  .marquee-item {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(253,246,236,0.85); white-space: nowrap; padding: 0 2.5rem;
+  }
+  .marquee-dot { color: rgba(253,246,236,0.5); }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .section { padding: 5rem 2.5rem; }
+  .section-head { text-align: center; margin-bottom: 3rem; }
+  .section-tag {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--brand); margin-bottom: 0.75rem;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.1; letter-spacing: 0;
+  }
+
+  .menu-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+  }
+  .menu-card {
+    background: rgba(253,246,236,0.04); border: 1px solid rgba(253,246,236,0.08);
+    border-radius: 8px; padding: 1.4rem; position: relative;
+    transition: all 0.3s; overflow: hidden;
+  }
+  .menu-card:hover { border-color: rgba(200,56,10,0.35); transform: translateY(-3px); }
+  .menu-photo {
+    width: 100%; aspect-ratio: 4 / 3; border-radius: 8px; object-fit: cover;
+    background: rgba(253,246,236,0.07); margin-bottom: 1rem; display: block;
+  }
+  .menu-emoji {
+    width: 100%; aspect-ratio: 4 / 3; border-radius: 8px; margin-bottom: 1rem;
+    display: grid; place-items: center; font-size: 3.2rem;
+    background: linear-gradient(135deg, rgba(200,56,10,0.18), rgba(232,160,32,0.12));
+  }
+  .menu-name {
+    font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .menu-desc { font-size: 0.85rem; color: rgba(253,246,236,0.58); line-height: 1.6; margin-bottom: 1.2rem; }
+  .menu-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .menu-price { font-size: 1.1rem; font-weight: 700; color: var(--gold); white-space: nowrap; }
+  .menu-tag-badge {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+    padding: 0.2rem 0.7rem; border-radius: 2rem;
+    background: rgba(200,56,10,0.2); color: var(--brand);
+    border: 1px solid rgba(200,56,10,0.3);
+  }
+
+  .info-strip {
+    background: rgba(253,246,236,0.04); border-top: 1px solid rgba(253,246,236,0.08);
+    border-bottom: 1px solid rgba(253,246,236,0.08);
+    display: flex; flex-wrap: wrap; justify-content: center;
+  }
+  .info-cell {
+    flex: 1; min-width: 200px; padding: 2.5rem 2rem; text-align: center;
+    border-right: 1px solid rgba(253,246,236,0.08);
+  }
+  .info-cell:last-child { border-right: none; }
+  .info-icon { font-size: 1.5rem; margin-bottom: 0.75rem; display: block; }
+  .info-label { font-size: 0.75rem; color: rgba(253,246,236,0.45); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .info-val { font-size: 0.95rem; font-weight: 700; }
+  .info-sub { font-size: 0.75rem; color: rgba(253,246,236,0.42); margin-top: 0.3rem; }
+
+  #about, #menu, #reviews, #find-us { scroll-margin-top: 80px; }
+  .about-box {
+    max-width: 760px; margin: 0 auto; text-align: center;
+    background: rgba(253,246,236,0.03); border: 1px solid rgba(253,246,236,0.08);
+    border-radius: 8px; padding: 3rem 2.5rem;
+  }
+  .about-box p { font-size: 1rem; color: rgba(253,246,236,0.7); line-height: 1.8; margin-bottom: 1rem; }
+  .about-box p:last-child { margin-bottom: 0; }
+
+  .reviews-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem; max-width: 1100px; margin: 0 auto;
+  }
+  .review-card {
+    background: rgba(253,246,236,0.04); border: 1px solid rgba(253,246,236,0.08);
+    border-radius: 8px; padding: 1.5rem;
+  }
+  .review-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 0.75rem; letter-spacing: 0.1em; }
+  .review-text { font-size: 0.9rem; color: rgba(253,246,236,0.75); line-height: 1.65; font-style: italic; }
+  .review-author { margin-top: 0.9rem; font-size: 0.78rem; color: rgba(253,246,236,0.48); font-weight: 700; }
+
+  .map-cta {
+    background: rgba(200,56,10,0.08); border: 1px solid rgba(200,56,10,0.2);
+    border-radius: 8px; padding: 3rem 2rem; text-align: center;
+    max-width: 760px; margin: 0 auto;
+  }
+  .map-cta h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .map-cta p { font-size: 0.9rem; color: rgba(253,246,236,0.62); margin-bottom: 1.5rem; }
+  .map-cta address { font-style: normal; font-size: 0.95rem; color: var(--cream); margin-bottom: 1.8rem; line-height: 1.6; }
+
+  footer {
+    border-top: 1px solid rgba(253,246,236,0.08);
+    padding: 2rem 2.5rem; text-align: center;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+  }
+  .footer-logo {
+    display: flex; align-items: center; justify-content: center; gap: 0.55rem;
+    font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900;
+  }
+  .footer-logo .logo-img { width: 38px; height: 38px; }
+  .footer-logo span { color: var(--brand); }
+  footer p { font-size: 0.8rem; color: rgba(253,246,236,0.35); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 0.8rem; color: rgba(253,246,236,0.45); text-decoration: none; cursor: pointer; }
+  .footer-links a:hover { color: var(--cream); }
+
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: #221508; border: 1px solid rgba(200,56,10,0.35);
+    border-radius: 8px; padding: 2.2rem; max-width: 460px; width: 100%;
+    animation: modalIn 0.25s ease;
+  }
+  @keyframes modalIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .modal-sub { font-size: 0.85rem; color: rgba(253,246,236,0.54); margin-bottom: 1.6rem; }
+  .order-options { display: flex; flex-direction: column; gap: 0.8rem; }
+  .order-btn {
+    display: flex; align-items: center; gap: 1rem;
+    background: rgba(253,246,236,0.05); border: 1px solid rgba(253,246,236,0.12);
+    border-radius: 8px; padding: 1rem 1.2rem;
+    text-decoration: none; color: var(--cream); transition: all 0.2s;
+  }
+  .order-btn:hover { background: rgba(200,56,10,0.15); border-color: rgba(200,56,10,0.4); }
+  .order-btn-icon { font-size: 1.35rem; width: 30px; text-align: center; }
+  .order-btn-text strong { display: block; font-size: 1rem; font-weight: 700; margin-bottom: 0.15rem; }
+  .order-btn-text span { font-size: 0.78rem; color: rgba(253,246,236,0.52); }
+  .modal-close {
+    margin-top: 1.2rem; width: 100%; background: transparent;
+    border: 1px solid rgba(253,246,236,0.15); color: rgba(253,246,236,0.62);
+    padding: 0.65rem; border-radius: 8px; font-size: 0.85rem; transition: all 0.2s;
+  }
+  .modal-close:hover { border-color: rgba(253,246,236,0.35); color: var(--cream); }
+
+  .admin-shell {
+    position: fixed; inset: 0; z-index: 300; display: none;
+    background: rgba(18,12,6,0.96); overflow-y: auto;
+  }
+  .admin-shell.active { display: block; }
+  .admin-top {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: 1rem 1.25rem; background: rgba(26,18,9,0.98);
+    border-bottom: 1px solid rgba(253,246,236,0.1);
+  }
+  .admin-title { font-weight: 800; letter-spacing: 0.03em; }
+  .admin-wrap { max-width: 1180px; margin: 0 auto; padding: 1.25rem; }
+  .login-card, .admin-card {
+    background: rgba(253,246,236,0.05); border: 1px solid rgba(253,246,236,0.1);
+    border-radius: 8px; padding: 1.25rem;
+  }
+  .login-card { max-width: 440px; margin: 6rem auto; }
+  .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .admin-wide { grid-column: 1 / -1; }
+  .admin-card h3 { font-size: 1.05rem; margin-bottom: 0.9rem; }
+  .field { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.8rem; }
+  .field label { font-size: 0.74rem; color: rgba(253,246,236,0.55); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; }
+  .field input, .field textarea, .field select {
+    width: 100%; border: 1px solid rgba(253,246,236,0.14);
+    border-radius: 8px; background: rgba(0,0,0,0.18);
+    color: var(--cream); padding: 0.75rem; font-size: 0.92rem; outline: none;
+  }
+  .field input[type="color"] { min-height: 46px; padding: 0.25rem; }
+  .field textarea { min-height: 94px; resize: vertical; }
+  .field input[type="file"] { padding: 0.6rem; }
+  .admin-actions, .item-actions { display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; }
+  .small-btn {
+    border: 1px solid rgba(253,246,236,0.15); background: rgba(253,246,236,0.06);
+    color: var(--cream); border-radius: 8px; padding: 0.6rem 0.85rem; font-weight: 700;
+  }
+  .small-btn.save { background: var(--green); border-color: var(--green); }
+  .small-btn.danger { background: rgba(200,56,10,0.18); border-color: rgba(200,56,10,0.45); }
+  .admin-message { margin-top: 0.8rem; font-size: 0.86rem; color: var(--gold); min-height: 1.2rem; }
+  .editable-list { display: grid; gap: 0.9rem; }
+  .edit-item {
+    border: 1px solid rgba(253,246,236,0.1);
+    border-radius: 8px; padding: 0.9rem; background: rgba(0,0,0,0.12);
+  }
+  .edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .muted { color: rgba(253,246,236,0.52); font-size: 0.85rem; line-height: 1.5; }
+  .hidden { display: none; }
+
+  @media (max-width: 860px) {
+    nav { padding: 0.85rem 1rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.1rem 4rem; }
+    .section { padding: 4rem 1.1rem; }
+    .hero-stats { gap: 1.2rem; flex-wrap: wrap; }
+    footer { justify-content: center; }
+    .admin-grid, .edit-row { grid-template-columns: 1fr; }
+    .admin-top { align-items: flex-start; flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="orderModal">
+  <div class="modal-box">
+    <div class="modal-title">Order Now</div>
+    <div class="modal-sub">Choose how you would like to order from Burgerita Khulshi.</div>
+    <div class="order-options" id="orderOptions"></div>
+    <button class="modal-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<div class="admin-shell" id="adminShell">
+  <div class="admin-top">
+    <div>
+      <div class="admin-title">Admin Panel</div>
+      <div class="muted">Only authorized admins can edit website content.</div>
+    </div>
+    <div class="admin-actions">
+      <button class="small-btn save hidden" id="saveBtn" onclick="saveAdminData()">Save Website</button>
+      <button class="small-btn hidden" id="logoutBtn" onclick="logoutAdmin()">Logout</button>
+      <button class="small-btn" onclick="closeAdmin()">Back to Website</button>
+    </div>
+  </div>
+
+  <div class="admin-wrap">
+    <div class="login-card" id="loginCard">
+      <h3>Admin Login</h3>
+      <div class="field">
+        <label>Email</label>
+        <input id="loginEmail" type="email" placeholder="Enter admin email" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="loginPassword" type="password" placeholder="Enter password" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" onclick="loginAdmin()">Login</button>
+      <div class="admin-message" id="loginMessage"></div>
+    </div>
+
+    <div class="admin-grid hidden" id="adminEditor">
+      <div class="admin-card">
+        <h3>Hero Section</h3>
+        <div class="field"><label>Brand Name</label><input data-bind="brandName"></div>
+        <div class="field"><label>Badge Text</label><input data-bind="heroBadge"></div>
+        <div class="field"><label>Main Title</label><input data-bind="heroTitle"></div>
+        <div class="field"><label>Red Highlight Word</label><input data-bind="heroAccent"></div>
+        <div class="field"><label>Subtitle</label><textarea data-bind="heroSubtitle"></textarea></div>
+        <div class="edit-row">
+          <div class="field"><label>Rating Stat</label><input data-bind="ratingStat"></div>
+          <div class="field"><label>Review Stat</label><input data-bind="reviewStat"></div>
+        </div>
+        <div class="field"><label>Fresh Stat</label><input data-bind="freshStat"></div>
+        <div class="field"><label>Hero Image Upload</label><input type="file" accept="image/*" onchange="uploadImage(event, 'heroImage')"></div>
+        <button class="small-btn danger" onclick="removeImage('heroImage')">Remove Hero Image</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>Branding & Design</h3>
+        <div class="field"><label>Logo Upload</label><input type="file" accept="image/*" onchange="uploadImage(event, 'logoImage')"></div>
+        <button class="small-btn danger" onclick="removeImage('logoImage')">Remove Logo</button>
+        <div class="edit-row" style="margin-top:0.9rem;">
+          <div class="field"><label>Main Color</label><input type="color" data-bind="brandColor"></div>
+          <div class="field"><label>Dark Main Color</label><input type="color" data-bind="brandDarkColor"></div>
+        </div>
+        <div class="edit-row">
+          <div class="field"><label>Text Color</label><input type="color" data-bind="creamColor"></div>
+          <div class="field"><label>Background Color</label><input type="color" data-bind="charcoalColor"></div>
+        </div>
+        <div class="field"><label>Highlight Color</label><input type="color" data-bind="goldColor"></div>
+        <div class="field"><label>Website Background Photo</label><input type="file" accept="image/*" onchange="uploadImage(event, 'siteBgImage')"></div>
+        <button class="small-btn danger" onclick="removeImage('siteBgImage')">Remove Background Photo</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>Business Info</h3>
+        <div class="field"><label>Phone</label><input data-bind="phone"></div>
+        <div class="field"><label>Hours</label><input data-bind="hours"></div>
+        <div class="field"><label>Friday Hours</label><input data-bind="fridayHours"></div>
+        <div class="field"><label>Short Location</label><input data-bind="shortLocation"></div>
+        <div class="field"><label>Location Detail</label><input data-bind="locationDetail"></div>
+        <div class="field"><label>Dine In Text</label><input data-bind="dineIn"></div>
+      </div>
+
+      <div class="admin-card admin-wide">
+        <h3>Menu Items</h3>
+        <div class="editable-list" id="menuEditor"></div>
+        <button class="small-btn" onclick="addMenuItem()">Add Menu Item</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>About Section</h3>
+        <div class="field"><label>Small Label</label><input data-bind="aboutTag"></div>
+        <div class="field"><label>Title</label><input data-bind="aboutTitle"></div>
+        <div class="field"><label>Paragraph 1</label><textarea data-bind="aboutOne"></textarea></div>
+        <div class="field"><label>Paragraph 2</label><textarea data-bind="aboutTwo"></textarea></div>
+        <div class="field"><label>Paragraph 3</label><textarea data-bind="aboutThree"></textarea></div>
+      </div>
+
+      <div class="admin-card">
+        <h3>Find Us and Order Links</h3>
+        <div class="field"><label>Find Us Title</label><input data-bind="findTitle"></div>
+        <div class="field"><label>Find Us Text</label><textarea data-bind="findText"></textarea></div>
+        <div class="field"><label>Address</label><textarea data-bind="address"></textarea></div>
+        <div class="field"><label>Google Map Link</label><input data-bind="mapLink"></div>
+        <div class="field"><label>Foodpanda Link</label><input data-bind="foodpandaLink"></div>
+        <div class="field"><label>Pathao Link</label><input data-bind="pathaoLink"></div>
+      </div>
+
+      <div class="admin-card admin-wide">
+        <h3>Reviews</h3>
+        <div class="editable-list" id="reviewEditor"></div>
+        <button class="small-btn" onclick="addReview()">Add Review</button>
+      </div>
+
+      <div class="admin-card admin-wide">
+        <h3>Website Controls</h3>
+        <div class="admin-actions">
+          <button class="small-btn save" onclick="saveAdminData()">Save Website</button>
+          <button class="small-btn danger" onclick="resetWebsite()">Reset All Content</button>
+        </div>
+        <div class="admin-message" id="adminMessage"></div>
+        <p class="muted">Changes are saved in this browser and shown on the public website immediately after saving.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-logo">
+    <img id="navLogoImage" class="logo-img" alt="Burgerita logo">
+    <div><span id="brandText">Burgerita</span><span>.</span></div>
+  </div>
+  <div class="nav-links">
+    <a onclick="scrollPageTo('menu')">Menu</a>
+    <a onclick="scrollPageTo('about')">About</a>
+    <a onclick="scrollPageTo('reviews')">Reviews</a>
+    <a onclick="scrollPageTo('find-us')">Find Us</a>
+    <button class="admin-link" onclick="openAdmin()">Admin</button>
+  </div>
+  <div class="nav-actions">
+    <button class="nav-cta" onclick="openModal()">Order Now</button>
+    <button class="admin-link" onclick="openAdmin()">Admin</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-content">
+    <div class="hero-badge" id="heroBadge"></div>
+    <h1><span id="heroTitle"></span><br><em id="heroAccent"></em></h1>
+    <p class="hero-sub" id="heroSubtitle"></p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="scrollPageTo('menu')">Explore Menu</button>
+      <button class="btn-ghost" onclick="scrollPageTo('about')">Our Story</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num" id="ratingStat"></div><div class="stat-label">Customer Rating</div></div>
+      <div><div class="stat-num" id="reviewStat"></div><div class="stat-label">Happy Reviews</div></div>
+      <div><div class="stat-num" id="freshStat"></div><div class="stat-label">Every Day</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<section class="section" id="menu">
+  <div class="section-head">
+    <div class="section-tag">Our Signature Menu</div>
+    <h2>Bold flavors,<br>crafted with care</h2>
+  </div>
+  <div class="menu-grid" id="menuGrid"></div>
+</section>
+
+<div class="info-strip">
+  <div class="info-cell">
+    <span class="info-icon">Hours</span>
+    <div class="info-label">Hours</div>
+    <div class="info-val" id="hoursText"></div>
+    <div class="info-sub" id="fridayHoursText"></div>
+  </div>
+  <div class="info-cell">
+    <span class="info-icon">Call</span>
+    <div class="info-label">Call Us</div>
+    <div class="info-val"><a id="phoneText"></a></div>
+  </div>
+  <div class="info-cell">
+    <span class="info-icon">Map</span>
+    <div class="info-label">Location</div>
+    <div class="info-val" id="shortLocationText"></div>
+    <div class="info-sub" id="locationDetailText"></div>
+  </div>
+  <div class="info-cell">
+    <span class="info-icon">Dine</span>
+    <div class="info-label">Dine In</div>
+    <div class="info-val" id="dineInText"></div>
+  </div>
+</div>
+
+<section class="section" id="about">
+  <div class="section-head">
+    <div class="section-tag" id="aboutTag"></div>
+    <h2 id="aboutTitle"></h2>
+  </div>
+  <div class="about-box" id="aboutBox"></div>
+</section>
+
+<section class="section" id="reviews">
+  <div class="section-head">
+    <div class="section-tag">What People Say</div>
+    <h2>Loved by locals</h2>
+  </div>
+  <div class="reviews-grid" id="reviewsGrid"></div>
+</section>
+
+<section class="section" id="find-us">
+  <div class="map-cta">
+    <h3 id="findTitle"></h3>
+    <p id="findText"></p>
+    <address id="addressText"></address>
+    <a id="mapButton" target="_blank" rel="noopener" style="text-decoration:none;">
+      <button class="btn-primary" style="margin: 0 auto;">Get Directions</button>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">
+    <img id="footerLogoImage" class="logo-img" alt="Burgerita logo">
+    <div><span id="footerBrand">Burgerita</span><span>.</span></div>
+  </div>
+  <p id="footerText"></p>
+  <div class="footer-links">
+    <a onclick="scrollPageTo('menu')">Menu</a>
+    <a onclick="scrollPageTo('reviews')">Reviews</a>
+    <a onclick="scrollPageTo('find-us')">Contact</a>
+  </div>
+</footer>
+
+<script>
+  const STORAGE_KEY = 'burgerita_khulshi_site_data_v1';
+  const LOGIN_KEY = 'burgerita_admin_logged_in';
+  const ADMIN_EMAIL = 'admin@gmail.com';
+  const ADMIN_PASSWORD = 'admin';
+
+  const defaultData = {
+    brandName: 'Burgerita',
+    logoImage: '',
+    brandColor: '#C8380A',
+    brandDarkColor: '#8A2006',
+    creamColor: '#FDF6EC',
+    charcoalColor: '#1A1209',
+    goldColor: '#E8A020',
+    siteBgImage: '',
+    heroBadge: 'Now Open in Khulshi, Chittagong',
+    heroTitle: 'Where every bite is',
+    heroAccent: 'bold.',
+    heroSubtitle: 'Handcrafted burgers made with fresh ingredients and fired up flavors. Dine in or take away - the craving stops here.',
+    heroImage: '',
+    ratingStat: '3.9',
+    reviewStat: '32+',
+    freshStat: 'Fresh',
+    phone: '+880 1879-738895',
+    hours: '11 AM - 10 PM',
+    fridayHours: 'Fri: 3 PM - 10 PM',
+    shortLocation: 'Zakir Hossain Rd',
+    locationDetail: 'Khulshi, Chittagong 4225',
+    dineIn: 'Couples & Small Groups',
+    aboutTag: 'Our Story',
+    aboutTitle: 'A passion for bold burgers',
+    aboutOne: 'Burgerita was born from a simple idea - that Chittagong deserves a burger joint that takes quality seriously. We source fresh ingredients daily and handcraft every patty with care.',
+    aboutTwo: 'Located in the heart of Khulshi, we are a cozy spot for couples, friends, and anyone who appreciates great food.',
+    aboutThree: 'Come hungry. Leave happy. That is the Burgerita promise.',
+    findTitle: 'Come visit us',
+    findText: 'We are easy to find in the heart of Khulshi. Stop by - the burgers are always fresh.',
+    address: '1030 Zakir Hossain Rd, Khulshi\nChittagong 4225, Bangladesh',
+    mapLink: 'https://www.google.com/maps/place/Burgerita+Khulshi/@22.3604371,91.8178101,150a,35y,98.92h,0.34t/data=!3m1!1e3!4m9!1m2!2m1!1sRestaurants!3m5!1s0x30acd9007c86bf8b:0x98550971227b6bb0!8m2!3d22.3605198!4d91.8178977!16s%2Fg%2F11wws0vjc3?entry=ttu',
+    foodpandaLink: 'https://www.foodpanda.com.bd',
+    pathaoLink: 'https://www.pathao.com/city/food/',
+    menu: [
+      { name: 'Classic Burger', desc: 'Our signature patty with fresh lettuce, tomatoes, special mayo sauce and crispy bun - always a crowd favorite.', price: 'Tk 180', tag: 'Bestseller', emoji: 'Burger', image: '' },
+      { name: 'Double Smash Burger', desc: 'Two smash patties, caramelized onions, melted cheese and Burgerita secret sauce between a toasted brioche bun.', price: 'Tk 280', tag: "Chef's Pick", emoji: 'Double', image: '' },
+      { name: 'Spicy Fiesta Burger', desc: 'Jalapenos, sriracha drizzle, pepper jack cheese and a crunchy slaw that balances the heat perfectly.', price: 'Tk 220', tag: 'Hot Fave', emoji: 'Spicy', image: '' },
+      { name: 'Meatbox Combo', desc: 'A loaded box of burger, fries and a drink. Perfect for a satisfying solo meal with all the good stuff together.', price: 'Tk 350', tag: 'Combo', emoji: 'Combo', image: '' },
+      { name: 'Crispy Fries', desc: 'Golden, seasoned fries - light on the outside, fluffy inside. The perfect sidekick to any burger order.', price: 'Tk 80', tag: 'Side', emoji: 'Fries', image: '' },
+      { name: 'Chilled Drinks', desc: "A selection of cold beverages to cool down your meal. Ask our team for today's available options.", price: 'Tk 60', tag: 'Drinks', emoji: 'Drink', image: '' }
+    ],
+    reviews: [
+      { stars: 5, text: "Loved it. They serve one of the best burgers I have ever had in Chittagong. Fresh, flavorful and worth every taka.", author: 'Local Customer' },
+      { stars: 4, text: 'Food was fresh and tasty. The place is cozy - great for couples. Would love to see a bigger seating area in future.', author: 'Happy Guest' },
+      { stars: 4, text: 'Food was good. Service was average. The classic burger hit the spot. Will definitely be back to try more items.', author: 'Regular Visitor' }
+    ]
+  };
+
+  let siteData = loadData();
+
+  function loadData() {
+    try {
+      return { ...defaultData, ...(JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}) };
+    } catch (error) {
+      return structuredClone(defaultData);
+    }
+  }
+
+  function persistData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData));
+  }
+
+  function escapeText(value) {
+    return String(value || '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    }[char]));
+  }
+
+  function telLink(phone) {
+    return 'tel:' + String(phone || '').replace(/[^\d+]/g, '');
+  }
+
+  function stars(count) {
+    const full = Math.max(0, Math.min(5, Number(count) || 0));
+    return '★★★★★'.slice(0, full) + '☆☆☆☆☆'.slice(0, 5 - full);
+  }
+
+  function renderSite() {
+    document.documentElement.style.setProperty('--brand', siteData.brandColor || defaultData.brandColor);
+    document.documentElement.style.setProperty('--brand-dark', siteData.brandDarkColor || defaultData.brandDarkColor);
+    document.documentElement.style.setProperty('--cream', siteData.creamColor || defaultData.creamColor);
+    document.documentElement.style.setProperty('--charcoal', siteData.charcoalColor || defaultData.charcoalColor);
+    document.documentElement.style.setProperty('--gold', siteData.goldColor || defaultData.goldColor);
+    document.documentElement.style.setProperty('--site-bg-image', siteData.siteBgImage ? `url("${siteData.siteBgImage}")` : 'linear-gradient(var(--charcoal), var(--charcoal))');
+
+    document.getElementById('brandText').textContent = siteData.brandName;
+    document.getElementById('footerBrand').textContent = siteData.brandName;
+    document.getElementById('footerText').textContent = '© 2026 ' + siteData.brandName + ' Khulshi - All rights reserved';
+    setLogo('navLogoImage');
+    setLogo('footerLogoImage');
+    document.getElementById('heroBadge').textContent = siteData.heroBadge;
+    document.getElementById('heroTitle').textContent = siteData.heroTitle;
+    document.getElementById('heroAccent').textContent = siteData.heroAccent;
+    document.getElementById('heroSubtitle').textContent = siteData.heroSubtitle;
+    document.getElementById('ratingStat').textContent = siteData.ratingStat;
+    document.getElementById('reviewStat').textContent = siteData.reviewStat;
+    document.getElementById('freshStat').textContent = siteData.freshStat;
+    document.getElementById('heroBg').style.setProperty('--hero-image', siteData.heroImage ? `url("${siteData.heroImage}")` : 'radial-gradient(ellipse 70% 60% at 70% 50%, rgba(200,56,10,0.22) 0%, transparent 70%)');
+
+    document.getElementById('hoursText').textContent = siteData.hours;
+    document.getElementById('fridayHoursText').textContent = siteData.fridayHours;
+    const phoneLink = document.getElementById('phoneText');
+    phoneLink.textContent = siteData.phone;
+    phoneLink.href = telLink(siteData.phone);
+    document.getElementById('shortLocationText').textContent = siteData.shortLocation;
+    document.getElementById('locationDetailText').textContent = siteData.locationDetail;
+    document.getElementById('dineInText').textContent = siteData.dineIn;
+
+    document.getElementById('menuGrid').innerHTML = siteData.menu.map(item => `
+      <div class="menu-card">
+        ${item.image ? `<img class="menu-photo" src="${item.image}" alt="${escapeText(item.name)}">` : `<div class="menu-emoji">${escapeText(item.emoji || 'Burger')}</div>`}
+        <div class="menu-name">${escapeText(item.name)}</div>
+        <div class="menu-desc">${escapeText(item.desc)}</div>
+        <div class="menu-footer">
+          <span class="menu-price">${escapeText(item.price)}</span>
+          <span class="menu-tag-badge">${escapeText(item.tag)}</span>
+        </div>
+      </div>
+    `).join('');
+
+    const marqueeItems = [...siteData.menu.map(item => item.name), 'Freshly Made Daily', siteData.shortLocation, siteData.brandName];
+    document.getElementById('marqueeTrack').innerHTML = [...marqueeItems, ...marqueeItems].map(text => `
+      <span class="marquee-item">${escapeText(text)} <span class="marquee-dot">◆</span></span>
+    `).join('');
+
+    document.getElementById('aboutTag').textContent = siteData.aboutTag;
+    document.getElementById('aboutTitle').innerHTML = escapeText(siteData.aboutTitle).replace(' bold ', '<br>bold ');
+    document.getElementById('aboutBox').innerHTML = [siteData.aboutOne, siteData.aboutTwo, siteData.aboutThree]
+      .filter(Boolean).map(text => `<p>${escapeText(text)}</p>`).join('');
+
+    document.getElementById('reviewsGrid').innerHTML = siteData.reviews.map(review => `
+      <div class="review-card">
+        <div class="review-stars">${stars(review.stars)}</div>
+        <div class="review-text">"${escapeText(review.text)}"</div>
+        <div class="review-author">${escapeText(review.author || '')}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('findTitle').textContent = siteData.findTitle;
+    document.getElementById('findText').textContent = siteData.findText;
+    document.getElementById('addressText').innerHTML = escapeText(siteData.address).replace(/\n/g, '<br>');
+    document.getElementById('mapButton').href = siteData.mapLink || '#';
+
+    document.getElementById('orderOptions').innerHTML = `
+      <a class="order-btn" href="${escapeText(siteData.foodpandaLink)}" target="_blank" rel="noopener">
+        <span class="order-btn-icon">FP</span><div class="order-btn-text"><strong>Order on Foodpanda</strong><span>Fast delivery to your doorstep</span></div>
+      </a>
+      <a class="order-btn" href="${escapeText(siteData.pathaoLink)}" target="_blank" rel="noopener">
+        <span class="order-btn-icon">PF</span><div class="order-btn-text"><strong>Order on Pathao Food</strong><span>Quick delivery across Chittagong</span></div>
+      </a>
+      <a class="order-btn" href="${telLink(siteData.phone)}">
+        <span class="order-btn-icon">Call</span><div class="order-btn-text"><strong>Call to Order</strong><span>${escapeText(siteData.phone)}</span></div>
+      </a>
+      <a class="order-btn" href="${escapeText(siteData.mapLink)}" target="_blank" rel="noopener">
+        <span class="order-btn-icon">Map</span><div class="order-btn-text"><strong>Visit Us</strong><span>${escapeText(siteData.shortLocation)}, ${escapeText(siteData.locationDetail)}</span></div>
+      </a>
+    `;
+  }
+
+  function setLogo(id) {
+    const logo = document.getElementById(id);
+    if (!logo) return;
+    if (siteData.logoImage) {
+      logo.src = siteData.logoImage;
+      logo.classList.add('has-logo');
+      return;
+    }
+    logo.removeAttribute('src');
+    logo.classList.remove('has-logo');
+  }
+
+  function renderAdmin() {
+    document.querySelectorAll('[data-bind]').forEach(input => {
+      input.value = siteData[input.dataset.bind] || '';
+    });
+
+    document.getElementById('menuEditor').innerHTML = siteData.menu.map((item, index) => `
+      <div class="edit-item">
+        <div class="edit-row">
+          <div class="field"><label>Name</label><input value="${escapeText(item.name)}" oninput="updateMenu(${index}, 'name', this.value)"></div>
+          <div class="field"><label>Price</label><input value="${escapeText(item.price)}" oninput="updateMenu(${index}, 'price', this.value)"></div>
+        </div>
+        <div class="field"><label>Description</label><textarea oninput="updateMenu(${index}, 'desc', this.value)">${escapeText(item.desc)}</textarea></div>
+        <div class="edit-row">
+          <div class="field"><label>Tag</label><input value="${escapeText(item.tag)}" oninput="updateMenu(${index}, 'tag', this.value)"></div>
+          <div class="field"><label>Image Label</label><input value="${escapeText(item.emoji)}" oninput="updateMenu(${index}, 'emoji', this.value)"></div>
+        </div>
+        <div class="field"><label>Upload Food Image</label><input type="file" accept="image/*" onchange="uploadMenuImage(event, ${index})"></div>
+        <div class="item-actions">
+          <button class="small-btn danger" onclick="removeMenuItem(${index})">Delete</button>
+          <button class="small-btn" onclick="clearMenuImage(${index})">Remove Image</button>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('reviewEditor').innerHTML = siteData.reviews.map((review, index) => `
+      <div class="edit-item">
+        <div class="edit-row">
+          <div class="field"><label>Stars</label><select onchange="updateReview(${index}, 'stars', this.value)">${[5,4,3,2,1].map(num => `<option value="${num}" ${Number(review.stars) === num ? 'selected' : ''}>${num}</option>`).join('')}</select></div>
+          <div class="field"><label>Author</label><input value="${escapeText(review.author)}" oninput="updateReview(${index}, 'author', this.value)"></div>
+        </div>
+        <div class="field"><label>Review Text</label><textarea oninput="updateReview(${index}, 'text', this.value)">${escapeText(review.text)}</textarea></div>
+        <button class="small-btn danger" onclick="removeReview(${index})">Delete</button>
+      </div>
+    `).join('');
+  }
+
+  function collectBoundFields() {
+    document.querySelectorAll('[data-bind]').forEach(input => {
+      siteData[input.dataset.bind] = input.value;
+    });
+  }
+
+  function saveAdminData() {
+    collectBoundFields();
+    persistData();
+    renderSite();
+    renderAdmin();
+    showMessage('adminMessage', 'Saved. Public website updated.');
+  }
+
+  function resetWebsite() {
+    if (!confirm('Reset all website content to default?')) return;
+    siteData = structuredClone(defaultData);
+    persistData();
+    renderSite();
+    renderAdmin();
+    showMessage('adminMessage', 'Website reset to default content.');
+  }
+
+  function updateMenu(index, key, value) {
+    siteData.menu[index][key] = value;
+  }
+
+  function addMenuItem() {
+    collectBoundFields();
+    siteData.menu.push({ name: 'New Item', desc: 'Write item details here.', price: 'Tk 0', tag: 'New', emoji: 'New', image: '' });
+    renderAdmin();
+  }
+
+  function removeMenuItem(index) {
+    siteData.menu.splice(index, 1);
+    renderAdmin();
+  }
+
+  function updateReview(index, key, value) {
+    siteData.reviews[index][key] = key === 'stars' ? Number(value) : value;
+  }
+
+  function addReview() {
+    collectBoundFields();
+    siteData.reviews.push({ stars: 5, text: 'Write customer review here.', author: 'Customer' });
+    renderAdmin();
+  }
+
+  function removeReview(index) {
+    siteData.reviews.splice(index, 1);
+    renderAdmin();
+  }
+
+  function uploadImage(event, key) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      siteData[key] = reader.result;
+      showMessage('adminMessage', 'Image ready. Click Save Website.');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeImage(key) {
+    siteData[key] = '';
+    showMessage('adminMessage', 'Image removed. Click Save Website.');
+  }
+
+  function uploadMenuImage(event, index) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      siteData.menu[index].image = reader.result;
+      renderAdmin();
+      showMessage('adminMessage', 'Menu image ready. Click Save Website.');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearMenuImage(index) {
+    siteData.menu[index].image = '';
+    renderAdmin();
+  }
+
+  function loginAdmin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      sessionStorage.setItem(LOGIN_KEY, 'yes');
+      showEditor();
+      return;
+    }
+    showMessage('loginMessage', 'Wrong email or password.');
+  }
+
+  function showEditor() {
+    document.getElementById('loginCard').classList.add('hidden');
+    document.getElementById('adminEditor').classList.remove('hidden');
+    document.getElementById('saveBtn').classList.remove('hidden');
+    document.getElementById('logoutBtn').classList.remove('hidden');
+    renderAdmin();
+  }
+
+  function logoutAdmin() {
+    sessionStorage.removeItem(LOGIN_KEY);
+    document.getElementById('loginCard').classList.remove('hidden');
+    document.getElementById('adminEditor').classList.add('hidden');
+    document.getElementById('saveBtn').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+  }
+
+  function openAdmin() {
+    document.getElementById('adminShell').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    if (sessionStorage.getItem(LOGIN_KEY) === 'yes') showEditor();
+  }
+
+  function closeAdmin() {
+    document.getElementById('adminShell').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function showMessage(id, text) {
+    const element = document.getElementById(id);
+    if (!element) return;
+    element.textContent = text;
+    setTimeout(() => { element.textContent = ''; }, 3500);
+  }
+
+  function scrollPageTo(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function openModal() {
+    document.getElementById('orderModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('orderModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('orderModal').addEventListener('click', event => {
+    if (event.target.id === 'orderModal') closeModal();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      closeModal();
+      closeAdmin();
+    }
+  });
+
+  document.addEventListener('input', event => {
+    if (event.target.matches('[data-bind]')) {
+      siteData[event.target.dataset.bind] = event.target.value;
+    }
+  });
+
+  if (location.hash === '#admin') openAdmin();
+  renderSite();
+</script>
+
+</body>
+</html>
